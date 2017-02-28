@@ -1,0 +1,28 @@
+venv/*
+*__pycache__*
+
+# Vim
+.*.swp
+
+# Flask Gitignore
+.DS_Store
+*.pyc
+*.pyo
+.env
+.env*
+dist
+build
+*.egg
+*.egg-info
+*.eggs
+Procfile
+_mailinglist
+.tox
+.cache/
+.idea/
+
+# Coverage reports
+htmlcov
+.coverage
+.coverage.*
+*,cover

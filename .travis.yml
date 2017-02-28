@@ -1,0 +1,18 @@
+sudo: false
+language: python
+python:
+- '3.6'
+install:
+- source .env
+- pip3 install -r requirements.txt
+- python3 -m spacy.en.download parser
+script: flask test
+deploy:
+  provider: heroku
+  app: pitchback-nlp
+  api_key:
+    secure: Jb01QvSxWFIyKp4TI5e2ERlfMisRzpqotokv7QE/EnNetb+neF3vseggBAAjyLSx3cI1jF+vc+nViuGPY//37qBKl3zJrQekYh8JpL0LCt0E5tknwekl0sl+7MulZGmNntwEyX6KPSmjp5ed4NmteXxKk4Gg35jQ5nkYH6dUwtC9h5scvWKUWmKSVyCa+3ZzfPBCKYdTMYEGe8v2AfY0ptw4I/XMB2hj/CaKp6dmInAtbBwWWHRKgTJq/w8TsY9QFRkEBptiAvE3NR0n0uuaaOZrPtAYiGt754OZJm/J5GtMJ0L5G3uVX1gLzX5HvPVfYXS7XgbV4icHMxbwOyfDtdAbE+3/i7PcLeaC7reqKtbrXdQ7IRj9apuQwkO45vInpjESMX2KFqloEVSbpkYtgGe5Wy+zrZn3uKvnBN33KvGJlZO03OHj7g20HLroD+BlVtm1z/cxQiNeNA5tf0nWbRtc97nM6vZJbXvkWsIyrb0S8wyS0WwlTpZGid7NWKFNw99/2nGsJPrJDUcdaGvGmpgtqXYrXcf76kTxQtV8BSTl1jkRi2euMhjeVk4uTRCS30d7gxSz2XTur+hyLMq3jT6zdy/tmFqrK/RtVeCNO7j7ZaJofMIMKjeBmXXNYR3CN1mr5XtkrD1ogFs5SJLS01uL8wnRbks50xOU7EJwYys=
+notifications:
+  email: false
+  slack:
+    secure: puuVYfF73fq+0rpHggivQN/EX3OntaLjNdIAA0Ku1Nz+6QRCZpkppM6a8Pjm5ImEL1gw/PES/bMI7JeP7DE/Db5Oejqq6RoM2mSNMTsb1CjCb3UikC2+Pl/pMGE459gaPvGhXV++wHlqfZAHsJ/zHBbWvUqP9eV9IlKf+OJd/PD4qaM7JrkKNUmeXN+cKclUtXhuQorYVM4Fb+6WXLHFxyH8G6MXvABPTYRWxjEIJ/2Zqt/5tBv9KMXzP44YBb0wV7D6YKnxWeRQpM0Pr7zNOiIKXrCIPFh7Bo3tc/Mg5i0XYudAWJCVLMQdeCoo8GebqE8wX8SJHAA7pFN07eGGRCvgn6v5MVx0CtkbkJ/jeMLa8x1vKK6e+DtyztlWZXN9/+2nGj7/UTaYurbeiA7gR8A0526X72fSIm2jtRjDjQA53bTNkqj2kHyzMpa/Q/8Pdn6BtirwlSpG4xUGCKVZfIyz5WG/whK5c1eg3Slav2qhCeAZU7R3ylD0wPmWiXMIl41160oWSvtmPX9UVf7HB+GJJpn/Ykt4F/66wcCeTnPdCsnzp6/FOB+bT6EcncBIpbrEuU/XbPZz7kxzWxbuI8bBDjOQAlyV1YN4JNvGhyEDAROhi5e5IDiDsZpxrTAPbQRqLHS9RC9AJnOVm90ThCfnSdrZ/N5V5W6RN0M94Kw=
