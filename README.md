@@ -1,5 +1,6 @@
 # Bio Backend
 
+See [Bio Client](https://github.com/kyledotterrer/bio-client) as well
 ### Installation
 
 This microservice is based off of Python 3. If you don't have it:
