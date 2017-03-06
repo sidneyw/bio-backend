@@ -15,7 +15,6 @@ build
 *.egg
 *.egg-info
 *.eggs
-Procfile
 _mailinglist
 .tox
 .cache/
