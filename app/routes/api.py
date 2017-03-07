@@ -3,9 +3,11 @@ from pymongo import MongoClient
 from flask import Blueprint, jsonify, request
 import json
 import os
+from bioservices.kegg import KEGG
 
 blueprint = Blueprint('/api', __name__, url_prefix='/api')
 
+kegg = KEGG()
 mongo = MongoClient(os.getenv("MONGODB_URI", "mongodb://localhost:27017/"))
 db = mongo["pathi"]
 
@@ -43,13 +45,13 @@ def formatPathway(pathwayDict):
 
 with open("./file_for_playing.json", "r") as f:
     pathwayData = json.load(f)
-    print(pathwayData)
 
 sampleData = formatPathway(pathwayData)
 
 # =======================
 # Routes
 # =======================
+
 @blueprint.route('/test', methods=['POST'])
 def test():
     request_data = request.json
@@ -59,6 +61,14 @@ def test():
 
 @blueprint.route("/sample", methods=["GET"])
 def sample():
-    response = jsonify(sampleData)
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
+    print(request.args)
+    return jsonify(sampleData)
+
+
+@blueprint.route("/pathway", methods=["GET"])
+def pathway():
+
+    pathway_name = request.values.get("name", "None")
+    data = kegg.parse_kgml_pathway(pathway_name)
+
+    return jsonify(formatPathway(data))

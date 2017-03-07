@@ -15,18 +15,18 @@ def formatPathway(pathwayDict):
         else:
             shape = "rectangle"
 
-      nodes.append({
-          "data": {
-            "id": entry["id"],
-            "name": entry["name"],
-            "shape": shape,
-          }
-      })
+        nodes.append({
+            "data": {
+                "id": entry["id"],
+                "name": entry["name"],
+                "shape": shape,
+            }
+        })
 
     for relation in pathwayDict["relations"]:
         edges.append({
             "data": {
-                "id": relation["entry1"] + relation["entry1"],
+                "id": relation["entry1"] + relation["entry2"],
                 "source": relation["entry1"],
                 "target": relation["entry2"],
             }
@@ -46,6 +46,7 @@ if __name__ == "__main__":
     res = kegg.list("pathway", organism="hsa")
     pathways = [x.split()[0] for x in res.strip().split("\n")]
 
+    print(pathways)
     print("Fetching Pathway Data")
     all_pathway_data = map(lambda x: kegg.parse_kgml_pathway(x), pathways)
 

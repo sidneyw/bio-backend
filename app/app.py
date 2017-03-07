@@ -17,6 +17,13 @@ def create_app(config_object=ProdConfig):
 
 def register_blueprints(app):
     """Register Flask blueprints."""
+
+    # Allow requests from any origin
+    @app.after_request
+    def apply_caching(response):
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+
     app.register_blueprint(routes.api.blueprint)
     return None
 
