@@ -1,4 +1,3 @@
-""" ROUTES """
 from pymongo import MongoClient
 from flask import Blueprint, jsonify, request
 import json
@@ -51,14 +50,6 @@ sampleData = formatPathway(pathwayData)
 # =======================
 # Routes
 # =======================
-
-@blueprint.route('/test', methods=['POST'])
-def test():
-    request_data = request.json
-    return jsonify({
-        "received": request_data,
-    })
-
 @blueprint.route("/sample", methods=["GET"])
 def sample():
     print(request.args)
@@ -67,8 +58,25 @@ def sample():
 
 @blueprint.route("/pathway", methods=["GET"])
 def pathway():
-
     pathway_name = request.values.get("name", "None")
     data = kegg.parse_kgml_pathway(pathway_name)
 
     return jsonify(formatPathway(data))
+
+@blueprint.route("/list", method=["GET"])
+def list():
+    res = kegg.list("pathway", organism="hsa")
+    pathways = [x.split()[0] for x in res.strip().split("\n")]
+
+    print(pathways)
+    print("Fetching Pathway Data")
+    all_pathway_data = map(lambda x: kegg.parse_kgml_pathway(x), pathways)
+
+    return jsonify({ "pathways": all_pathway_data })
+
+@blueprint.route("/entry", method=["GET"])
+def entry():
+    entry = request.values.get("name", "None")
+    data = kegg.parse(kegg.get(entry))
+
+    return jsonify({ "entry": entry })
