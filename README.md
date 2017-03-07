@@ -35,3 +35,5 @@ gunicorn manage:app
 1. [Flask](http://flask.pocoo.org/docs/0.12/)
 1. [Pymongo](https://api.mongodb.com/python/current/index.html)
 1. [Mongothon](https://github.com/gamechanger/mongothon)
+1. [Kegg Parser](https://pythonhosted.org/bioservices/references.html#bioservices.kegg.KEGGParser)
+	- [Tutorial](https://pythonhosted.org/bioservices/kegg_tutorial.html)
