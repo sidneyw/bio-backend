@@ -24,8 +24,6 @@ def create_app(config_object=ProdConfig):
 def register_blueprints(app):
     """Register Flask blueprints."""
 
-    # Allow requests from any origin
-
     app.register_blueprint(routes.api.blueprint)
     return None
 

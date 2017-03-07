@@ -58,7 +58,7 @@ def sample():
 
 @blueprint.route("/pathway", methods=["GET"])
 def pathway():
-    pathway_name = request.values.get("name", "None")
+    pathway_name = request.values.get("id", "None")
     data = kegg.parse_kgml_pathway(pathway_name)
 
     return jsonify(formatPathway(data))
@@ -66,13 +66,22 @@ def pathway():
 @blueprint.route("/list", methods=["GET"])
 def list():
     res = kegg.list("pathway", organism="hsa")
-    pathways = [x.split()[0] for x in res.strip().split("\n")]
+    print(res)
+    # pathways = [x.split()[0] for x in res.strip().split("\n")]
 
-    print(pathways)
-    print("Fetching Pathway Data")
-    all_pathway_data = map(lambda x: kegg.parse_kgml_pathway(x), pathways)
+    pathways = []
 
-    return jsonify({ "pathways": all_pathway_data })
+    for pathway in res.strip().split("\n"):
+        splitPath = pathway.split()
+        name = " ".join(splitPath[1:])
+        name = name.split("-")[0].strip()
+
+        pathways.append({"id": splitPath[0], "name": name})
+
+    # print("Fetching Pathway Data")
+    # all_pathway_data = map(lambda x: kegg.parse_kgml_pathway(x), pathways)
+
+    return jsonify({ "pathways": pathways })
 
 @blueprint.route("/entry", methods=["GET"])
 def entry():
