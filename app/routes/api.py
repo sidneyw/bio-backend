@@ -7,8 +7,8 @@ from bioservices.kegg import KEGG
 blueprint = Blueprint('/api', __name__, url_prefix='/api')
 
 kegg = KEGG()
-mongo = MongoClient(os.getenv("MONGODB_URI", "mongodb://localhost:27017/"))
-db = mongo["pathi"]
+# mongo = MongoClient(os.getenv("MONGODB_URI", "mongodb://localhost:27017/"))
+# db = mongo["pathi"]
 
 
 def formatPathway(pathwayDict):
@@ -63,7 +63,7 @@ def pathway():
 
     return jsonify(formatPathway(data))
 
-@blueprint.route("/list", method=["GET"])
+@blueprint.route("/list", methods=["GET"])
 def list():
     res = kegg.list("pathway", organism="hsa")
     pathways = [x.split()[0] for x in res.strip().split("\n")]
@@ -74,7 +74,7 @@ def list():
 
     return jsonify({ "pathways": all_pathway_data })
 
-@blueprint.route("/entry", method=["GET"])
+@blueprint.route("/entry", methods=["GET"])
 def entry():
     entry = request.values.get("name", "None")
     data = kegg.parse(kegg.get(entry))
