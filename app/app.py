@@ -10,6 +10,7 @@ def create_app(config_object=ProdConfig):
     """
     app = Flask(__name__.split('.')[0])
     app.config.from_object(config_object)
+
     @app.after_request
     def apply_caching(response):
         response.headers.add("Access-Control-Allow-Origin", "*")
