@@ -59,6 +59,7 @@ def sample():
 
 @blueprint.route("/pathway", methods=["GET"])
 def pathway():
+    ## Modified from: https://pythonhosted.org/bioservices/_modules/bioservices/kegg.html#KEGG.parse_kgml_pathway
     pathway_name = request.values.get("id", "None")
 
     output = {'relations':[], 'entries':[], 'reactions':[]}
