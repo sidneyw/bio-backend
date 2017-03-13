@@ -16,27 +16,22 @@ def formatPathway(pathwayDict):
     edges = [];
 
     for entry in pathwayDict["entries"]:
-        if entry["type"] == "compound":
-            shape = "triangle"
-        elif entry["type"] == "ortholog":
-            shape = "ellipse"
-        else:
-            shape = "rectangle"
-
         nodes.append({
             "data": {
                 "id": entry["id"],
-                "name": entry["name"],
-                "shape": shape,
+                "db_name": entry["name"],
+                "type": entry["type"],
+                "name": entry["gene_names"],
+                "db_link": entry["link"]
             }
         })
 
     for relation in pathwayDict["relations"]:
         edges.append({
             "data": {
-                "id": relation["entry1"] + relation["entry2"],
+                "id": "rel" + relation["entry1"] + "to" + relation["entry2"],
                 "source": relation["entry1"],
-                "target": relation["entry2"],
+                "target": relation["entry2"]
             }
         })
 
