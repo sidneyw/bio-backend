@@ -22,7 +22,13 @@ def formatPathway(pathwayDict):
                 "db_name": entry["name"],
                 "type": entry["type"],
                 "name": entry["gene_names"],
-                "db_link": entry["link"]
+                "db_link": entry["link"],
+                "x_coord": entry["x_coord"],
+                "y_coord": entry["y_coord"]
+            },
+            "position": {
+                'x': (int(entry["y_coord"])*2),
+                'y': (int(entry["x_coord"])*2)
             }
         })
 
@@ -37,10 +43,10 @@ def formatPathway(pathwayDict):
 
     return { "nodes": nodes, "edges": edges }
 
-with open("./file_for_playing.json", "r") as f:
-    pathwayData = json.load(f)
+# with open("./file_for_playing.json", "r") as f:
+    # pathwayData = json.load(f)
 
-sampleData = formatPathway(pathwayData)
+# sampleData = formatPathway(pathwayData)
 
 # =======================
 # Routes
@@ -56,13 +62,14 @@ def pathway():
     pathway_name = request.values.get("id", "None")
 
     output = {'relations':[], 'entries':[], 'reactions':[]}
-    res1 = k.easyXML(k.get(pathway_name, "kgml"))
+    res1 = kegg.easyXML(kegg.get(pathway_name, "kgml"))
 
     entries = [x for x in res1.findAll("entry")]
     for entry in entries:
         output['entries'].append({
             'id': entry.get("id"),
-            'name': entry.get("type"),
+            'name': entry.get("name"),
+            'type': entry.get("type"),
             'link': entry.get("link"),
             'gene_names': entry.find("graphics").get("name"),
             ## This is what we added: Accessing other parts of kgml file
