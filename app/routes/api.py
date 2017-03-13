@@ -59,9 +59,68 @@ def sample():
 @blueprint.route("/pathway", methods=["GET"])
 def pathway():
     pathway_name = request.values.get("id", "None")
-    data = kegg.parse_kgml_pathway(pathway_name)
 
-    return jsonify(formatPathway(data))
+    output = {'relations':[], 'entries':[], 'reactions':[]}
+    res1 = k.easyXML(k.get(pathway_name, "kgml"))
+
+    entries = [x for x in res1.findAll("entry")]
+    for entry in entries:
+        output['entries'].append({
+            'id': entry.get("id"),
+            'name': entry.get("type"),
+            'link': entry.get("link"),
+            'gene_names': entry.find("graphics").get("name"),
+            ## This is what we added: Accessing other parts of kgml file
+            'x_coord': entry.find("graphics").get("x"),
+            'y_coord': entry.find("graphics").get("y")
+        })
+
+    relations = [(x.get("entry1"), x.get("entry2"), x.get("type")) for x in res1.findAll("relation")]
+    subtypes = [x.findAll("subtype") for x in res1.findAll("relation")]
+
+    assert len(subtypes) == len(relations)
+
+    for relation, subtype in zip(relations, subtypes):
+        if len(subtype)==0: # nothing to do with the species ??? TODO
+            pass
+        else:
+            for this in subtype:
+                value = this.get("value")
+                name = this.get("name")
+                output['relations'].append({
+                    'entry1':relation[0],
+                    'entry2':relation[1],
+                    'link':relation[2],
+                   'value':value,
+                    'name':name})
+
+    reactions = [x for x in res1.findAll("reaction")]
+
+    for reaction in reactions:
+        subs = reaction.findAll("substrate")
+        substrates = []
+        for sub in subs:
+            substrates.append({
+                'id': sub.get("id"),
+                'name': sub.get("name")
+            })
+        prods = reaction.findAll("product")
+        products = []
+        for prod in prods:
+            products.append({
+                'id': prod.get("id"),
+                'name': prod.get("name")
+            })
+        reaction = {'substrates': substrates, 'products': products}
+        output['reactions'].append(reaction)
+
+    # we need to map back to KEgg IDs...
+    # data = output
+
+
+    # data = kegg.parse_kgml_pathway(pathway_name)
+    return jsonify(formatPathway(output))
+    # return jsonify(formatPathway(data))
 
 @blueprint.route("/list", methods=["GET"])
 def list():
