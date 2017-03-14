@@ -19,24 +19,34 @@ def formatPathway(pathwayDict):
     for entry in pathwayDict["entries"]:
         if entry["type"] == "pway":
             pid = entry["name"]
-            continue
-        if entry["type"] != "ortholog": # orthologs don't have edges in KEGG's maps
-
-            nodes.append({
-                "data": {
-                    "id": entry["id"],
-                    "db_name": entry["name"],
-                    "type": entry["type"],
-                    "name": entry["gene_names"],
-                    "db_link": entry["link"],
-                    "x_coord": entry["x_coord"],
-                    "y_coord": entry["y_coord"]
-                },
-                "position": {
-                    'x': (int(entry["x_coord"])*3),
-                    'y': (int(entry["y_coord"])*2)
-                }
-        })
+            print(pid)
+        elif entry["type"] != "ortholog": # orthologs don't have edges in KEGG's maps
+            if entry["x_coord"] is not None:
+                nodes.append({
+                    "data": {
+                        "id": entry["id"],
+                        "db_name": entry["name"],
+                        "type": entry["type"],
+                        "name": entry["gene_names"],
+                        "db_link": entry["link"],
+                        "x_coord": entry["x_coord"],
+                        "y_coord": entry["y_coord"]
+                    },
+                    "position": {
+                        'x': (int(entry["x_coord"])*3),
+                        'y': (int(entry["y_coord"])*2)
+                    }
+                })
+            else:
+                nodes.append({
+                    "data": {
+                        "id": entry["id"],
+                        "db_name": entry["name"],
+                        "type": entry["type"],
+                        "name": entry["gene_names"],
+                        "db_link": entry["link"]
+                    }
+            })
 
     for relation in pathwayDict["relations"]:
         edges.append({
@@ -94,7 +104,7 @@ def pathway():
 
     entries = [x for x in res1.findAll("entry")]
     for entry in entries:
-        if request.values.get("id") == entry.get("id"): ## We added this
+        if request.values.get("id") == entry.get("name"): ## We added this
             output['entries'].append({
                 'id': entry.get("id"),
                 'name': entry.get("name"),
@@ -128,12 +138,20 @@ def pathway():
             for this in subtype:
                 value = this.get("value")
                 name = this.get("name")
+                # We changed this to get relations between genes / maps mediated by compounds
                 output['relations'].append({
                     'entry1':relation[0],
+                    'entry2':value,
+                    'link':relation[2],
+                    'value':value,
+                    'name':name})
+                output['relations'].append({
+                    'entry1':value,
                     'entry2':relation[1],
                     'link':relation[2],
-                   'value':value,
+                    'value':value,
                     'name':name})
+
 
     ## We also added the reactions stuff
     reactions = [x for x in res1.findAll("reaction")]
@@ -159,9 +177,6 @@ def pathway():
             'substrates': substrates,
             'products': products}
         output['reactions'].append(reaction)
-
-    # we need to map back to KEgg IDs...
-    # data = output
 
 
     # data = kegg.parse_kgml_pathway(pathway_name)
