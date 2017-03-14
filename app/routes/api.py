@@ -37,9 +37,30 @@ def formatPathway(pathwayDict):
             "data": {
                 "id": "rel" + relation["entry1"] + "to" + relation["entry2"],
                 "source": relation["entry1"],
-                "target": relation["entry2"]
+                "target": relation["entry2"],
+                "type": "rel",
+                "link": relation["link"],
+                "value": relation["value"],
+                "subtype": relation["name"]
             }
         })
+
+    for reaction in pathwayDict["reactions"]:
+        for subst in reaction["substrates"]:
+            for prod in reaction["products"]:  
+                edges.append({
+                    "data": {
+                        "id": "react" + subst["id"] + "to" + prod["id"],
+                        "source": subst["id"],
+                        "target": prod["id"],
+                        "type": "reaction",
+                        "substrate": subst["name"],
+                        "product": prod["name"],
+                        "subtype": reaction["type"],
+                        "name": reaction["name"],
+                        "value": reaction["value"]
+                    }
+                })
 
     return { "nodes": nodes, "edges": edges }
 
@@ -114,7 +135,11 @@ def pathway():
                 'id': prod.get("id"),
                 'name': prod.get("name")
             })
-        reaction = {'substrates': substrates, 'products': products}
+        reaction = { 'value': reaction.get("id"),
+            'name': reaction.get("name"),
+            'type': reaction.get("type"),
+            'substrates': substrates,
+            'products': products}
         output['reactions'].append(reaction)
 
     # we need to map back to KEgg IDs...
