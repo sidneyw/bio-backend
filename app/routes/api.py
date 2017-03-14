@@ -29,8 +29,8 @@ def formatPathway(pathwayDict):
                     "y_coord": entry["y_coord"]
                 },
                 "position": {
-                    'x': (int(entry["y_coord"])*2),
-                    'y': (int(entry["x_coord"])*2)
+                    'x': (int(entry["x_coord"])*3),
+                    'y': (int(entry["y_coord"])*2)
                 }
         })
 
@@ -49,7 +49,7 @@ def formatPathway(pathwayDict):
 
     for reaction in pathwayDict["reactions"]:
         for subst in reaction["substrates"]:
-            for prod in reaction["products"]:  
+            for prod in reaction["products"]:
                 edges.append({
                     "data": {
                         "id": "react" + subst["id"] + "to" + prod["id"],
