@@ -12,10 +12,14 @@ kegg = KEGG()
 
 
 def formatPathway(pathwayDict):
+    pid = ""
     nodes = [];
     edges = [];
 
     for entry in pathwayDict["entries"]:
+        if entry["type"] == "pway":
+            pid = entry["name"]
+            continue
         if entry["type"] != "ortholog": # orthologs don't have edges in KEGG's maps
 
             nodes.append({
@@ -64,7 +68,7 @@ def formatPathway(pathwayDict):
                     }
                 })
 
-    return { "nodes": nodes, "edges": edges }
+    return { "id": pid, "nodes": nodes, "edges": edges }
 
 # with open("./file_for_playing.json", "r") as f:
     # pathwayData = json.load(f)
@@ -90,6 +94,17 @@ def pathway():
 
     entries = [x for x in res1.findAll("entry")]
     for entry in entries:
+        if request.values.get("id") == entry.get("id"): ## We added this
+            output['entries'].append({
+                'id': entry.get("id"),
+                'name': entry.get("name"),
+                'type': "pway",
+                'link': entry.get("link"),
+                'gene_names': entry.find("graphics").get("name"),
+                'x_coord': entry.find("graphics").get("x"),
+                'y_coord': entry.find("graphics").get("y")
+            })
+            continue
         output['entries'].append({
             'id': entry.get("id"),
             'name': entry.get("name"),
@@ -120,6 +135,7 @@ def pathway():
                    'value':value,
                     'name':name})
 
+    ## We also added the reactions stuff
     reactions = [x for x in res1.findAll("reaction")]
 
     for reaction in reactions:
@@ -163,7 +179,7 @@ def list():
     for pathway in res.strip().split("\n"):
         splitPath = pathway.split()
         name = " ".join(splitPath[1:])
-        name = name.split("-")[0].strip()
+        name = name.split("(")[0].strip()
 
         pathways.append({"id": splitPath[0], "name": name})
 
