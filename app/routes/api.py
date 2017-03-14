@@ -16,20 +16,22 @@ def formatPathway(pathwayDict):
     edges = [];
 
     for entry in pathwayDict["entries"]:
-        nodes.append({
-            "data": {
-                "id": entry["id"],
-                "db_name": entry["name"],
-                "type": entry["type"],
-                "name": entry["gene_names"],
-                "db_link": entry["link"],
-                "x_coord": entry["x_coord"],
-                "y_coord": entry["y_coord"]
-            },
-            "position": {
-                'x': (int(entry["y_coord"])*2),
-                'y': (int(entry["x_coord"])*2)
-            }
+        if entry["type"] != "ortholog": # orthologs don't have edges in KEGG's maps
+
+            nodes.append({
+                "data": {
+                    "id": entry["id"],
+                    "db_name": entry["name"],
+                    "type": entry["type"],
+                    "name": entry["gene_names"],
+                    "db_link": entry["link"],
+                    "x_coord": entry["x_coord"],
+                    "y_coord": entry["y_coord"]
+                },
+                "position": {
+                    'x': (int(entry["y_coord"])*2),
+                    'y': (int(entry["x_coord"])*2)
+                }
         })
 
     for relation in pathwayDict["relations"]:
