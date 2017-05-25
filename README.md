@@ -51,3 +51,4 @@ gunicorn manage:app
 1. [Mongothon](https://github.com/gamechanger/mongothon)
 1. [Kegg Parser](https://pythonhosted.org/bioservices/references.html#bioservices.kegg.KEGGParser)
 	- [Tutorial](https://pythonhosted.org/bioservices/kegg_tutorial.html)
+1. [Flask starter](https://github.com/jason-feng/flask-api-starter-app) 
